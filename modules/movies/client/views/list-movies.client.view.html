@@ -1,0 +1,23 @@
+<section>
+  <div class="page-header">
+    <h1>Movies</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="movie in vm.movies" ui-sref="movies.view({ movieId: movie._id })" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="movie.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="movie.user" ng-bind="movie.user.displayName"></span>
+        <span ng-if="!movie.user">Deleted User</span>
+      </small>
+      <hr>
+      <h4 class="list-group-item-heading" ng-bind="movie.title"></h4>
+      <p>{{movie.body | limitTo:140}}</p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.movies.$resolved && !vm.movies.length">
+    No Movies yet, why don't you
+    <a ui-sref="movies.create">create one</a>?
+  </div>
+</section>

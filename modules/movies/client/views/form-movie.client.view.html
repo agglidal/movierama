@@ -1,0 +1,31 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.movie._id ? 'Edit Movie' : 'New Movie'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.movieForm" class="form-horizontal" ng-submit="vm.save(vm.form.movieForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="title">Title</label>
+          <input name="title" type="text" ng-model="vm.movie.title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="vm.form.movieForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Movie title is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="body">Description</label>
+          <textarea name="body" type="text" ng-model="vm.movie.body" id="body" class="form-control" placeholder="Description" required></textarea>
+          <div ng-messages="vm.form.movieForm.body.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Movie description is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.movie._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
