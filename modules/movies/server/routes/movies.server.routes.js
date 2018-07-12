@@ -8,11 +8,15 @@ var moviesPolicy = require('../policies/movies.server.policy'),
 
 module.exports = function(app) {
   // Movies Routes
-  app.route('/api/movies').all(moviesPolicy.isAllowed)
+  app
+    .route('/api/movies')
+    .all(moviesPolicy.isAllowed)
     .get(movies.list)
     .post(movies.create);
 
-  app.route('/api/movies/:movieId').all(moviesPolicy.isAllowed)
+  app
+    .route('/api/movies/:movieId')
+    .all(moviesPolicy.isAllowed)
     .get(movies.read)
     .put(movies.update)
     .delete(movies.delete);

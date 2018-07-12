@@ -3,7 +3,10 @@
 (function() {
   'use strict';
 
-  angular.module('movies').factory('MoviesService', MoviesService);
+  angular
+    .module('movies')
+    .factory('MoviesService', MoviesService)
+    .factory('MoviesServiceSortDate', MoviesServiceSortDate);
 
   MoviesService.$inject = ['$resource'];
 
@@ -19,5 +22,19 @@
         }
       }
     );
+  }
+
+  MoviesServiceSortDate.$inject = ['$resource'];
+
+  function MoviesServiceSortDate($resource) {
+    var service = {
+      getMovieList: getMovieList
+    };
+
+    return service;
+
+    function getMovieList(order) {
+      return $resource('api/movies').query({ order: order });
+    }
   }
 })();

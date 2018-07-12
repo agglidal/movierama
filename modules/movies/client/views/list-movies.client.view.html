@@ -1,23 +1,35 @@
 <section>
   <div class="page-header">
-    <h1>Movies</h1>
+    <h3>Sort by:
+      <a class="ng-binding ng-scope" ng-click="vm.sortLikes()">Likes</a>
+      <a class="ng-binding ng-scope" ng-click="vm.sortHates()">Hates</a>
+      <a class="ng-binding ng-scope" ng-click="vm.sortDate()">Date</a>
+    </h3>
   </div>
   <div class="list-group">
-    <a ng-repeat="movie in vm.movies" ui-sref="movies.view({ movieId: movie._id })" class="list-group-item">
+    <a ng-repeat="movie in vm.movies" class="list-group-item">
+      <!-- ui-sref="movies.view({ movieId: movie._id })"  -->
+      <h4 class="list-group-item-heading" ng-bind="movie.title"></h4>
       <small class="list-group-item-text">
         Posted on
         <span ng-bind="movie.created | date:'mediumDate'"></span>
         by
-        <span ng-if="movie.user" ng-bind="movie.user.displayName"></span>
-        <span ng-if="!movie.user">Deleted User</span>
+        <span ng-if=" movie.user " ng-click="vm.sortUser() ">{{movie.user.displayName}}</span>
+        <span ng-if="!movie.user ">Deleted User</span>
+        <h2>AA {{vm.authentication.user.displayName}}</h2>
       </small>
       <hr>
-      <h4 class="list-group-item-heading" ng-bind="movie.title"></h4>
-      <p>{{movie.body | limitTo:140}}</p>
+      <p>{{movie.body | limitTo:500}}</p>
+      <small class="list-group-item-action active ">Likes
+        <span ng-bind="movie.likes" ng-click="movie.likes(movie._id)" ng-init="movie.likes=0"></span>
+      </small>
+      <small class="list-group-item-action active ">Hates
+        <span ng-bind="movie.hates " ng-click="movie.hates(movie._id)" ng-init="movie.hates=0"></span>
+      </small>
     </a>
   </div>
-  <div class="alert alert-warning text-center" ng-if="vm.movies.$resolved && !vm.movies.length">
+  <div class="alert alert-warning text-center " ng-if="vm.movies.$resolved && !vm.movies.length ">
     No Movies yet, why don't you
-    <a ui-sref="movies.create">create one</a>?
+    <a ui-sref="movies.create ">create one</a>?
   </div>
 </section>

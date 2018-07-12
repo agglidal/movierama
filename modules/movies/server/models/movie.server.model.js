@@ -29,15 +29,15 @@ var MovieSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  likes: {
+    type: Number,
+    default: 0
+  },
+  hates: {
+    type: Number,
+    default: 0
   }
-  // likes: {
-  //   type: number,
-  //   default: 0
-  // },
-  // hates: {
-  //   type: number,
-  //   default: 0
-  // }
 });
 
 mongoose.model('Movie', MovieSchema);
