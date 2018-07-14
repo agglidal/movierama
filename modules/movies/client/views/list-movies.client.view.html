@@ -16,15 +16,17 @@
         by
         <span ng-if=" movie.user " ng-click="vm.listUser(movie.user._id) ">{{movie.user.displayName}}</span>
         <span ng-if="!movie.user ">Deleted User</span>
-        <h2>AA {{movie.user._id}}</h2>
       </small>
       <hr>
       <p>{{movie.body | limitTo:1000}}</p>
       <small class="list-group-item-action active ">Likes
-        <span ng-bind="movie.likes" ng-click="movie.likes=movie.likes+1; vm.addOpinion(movie._id, 'like')"></span>
+        <button type="button" class="btn btn-link" ng-bind="movie.likes" ng-disabled="!vm.authentication.user||movie.user._id===vm.authentication.user._id"
+          ng-click="movie.likes=movie.likes+1; vm.addOpinion(movie._id, 'like')">
+        </button>
       </small>
       <small class="list-group-item-action active ">Hates
-        <span ng-bind="movie.hates " ng-click="movie.hates=movie.hates+1;vm.addOpinion(movie._id, 'hate')"></span>
+        <button type="button" class="btn btn-link" ng-bind="movie.hates " ng-disabled="!vm.authentication.user||movie.user._id===vm.authentication.user._id"
+          ng-click="movie.hates=movie.hates+1;vm.addOpinion(movie._id, 'hate')"></button>
       </small>
     </a>
   </div>
