@@ -14,9 +14,9 @@
         Posted on
         <span ng-bind="movie.created | date:'mediumDate'"></span>
         by
-        <span ng-if=" movie.user " ng-click="vm.sortUser() ">{{movie.user.displayName}}</span>
+        <span ng-if=" movie.user " ng-click="vm.listUser(movie.user._id) ">{{movie.user.displayName}}</span>
         <span ng-if="!movie.user ">Deleted User</span>
-        <h2>AA {{vm.authentication.user.displayName}}</h2>
+        <h2>AA {{movie.user._id}}</h2>
       </small>
       <hr>
       <p>{{movie.body | limitTo:500}}</p>

@@ -9,12 +9,14 @@
   MoviesListController.$inject = [
     'MoviesService',
     'MoviesServiceSortDate',
+    'MoviesServicePerUser',
     'Authentication'
   ];
   // MoviesListController.$inject = ['MoviesService'];
   function MoviesListController(
     MoviesService,
     MoviesServiceSortDate,
+    MoviesServicePerUser,
     Authentication
   ) {
     var vm = this;
@@ -25,6 +27,9 @@
     vm.sortDate = function() {
       vm.ascending = -vm.ascending;
       vm.movies = MoviesServiceSortDate.getMovieList(vm.ascending);
+    };
+    vm.listUser = function(userId) {
+      vm.movies = MoviesServicePerUser.getUserMovieList(userId);
     };
   }
 })();

@@ -6,7 +6,8 @@
   angular
     .module('movies')
     .factory('MoviesService', MoviesService)
-    .factory('MoviesServiceSortDate', MoviesServiceSortDate);
+    .factory('MoviesServiceSortDate', MoviesServiceSortDate)
+    .factory('MoviesServicePerUser', MoviesServicePerUser);
 
   MoviesService.$inject = ['$resource'];
 
@@ -35,6 +36,22 @@
 
     function getMovieList(order) {
       return $resource('api/movies').query({ order: order });
+    }
+  }
+
+  MoviesServicePerUser.$inject = ['$resource'];
+
+  function MoviesServicePerUser($resource) {
+    var service = {
+      getUserMovieList: getUserMovieList
+    };
+
+    return service;
+
+    function getUserMovieList(userId) {
+      return $resource('api/movies/byUser/:userId').query({
+        userId: userId
+      });
     }
   }
 })();

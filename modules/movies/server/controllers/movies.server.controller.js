@@ -5,8 +5,9 @@
  * Module dependencies.
  */
 var path = require('path'),
-  mongoose = require('mongoose'),
+  mongoose = require('mongoose').set('debug', true),
   Movie = mongoose.model('Movie'),
+  User = mongoose.model('User'),
   errorHandler = require(path.resolve(
     './modules/core/server/controllers/errors.server.controller'
   )),
@@ -108,6 +109,28 @@ exports.list = function(req, res) {
     });
 };
 
+exports.listUser = function(req, res) {
+  var userId = req.params.userId;
+  Movie.find({ user: userId })
+    // .sort({ created: order })
+    .populate({
+      path: 'user',
+      match: { _id: userId }
+    })
+    .populate({
+      path: 'displayName'
+    })
+    .exec(function(err, movies) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(movies);
+      }
+    });
+};
+
 // exports.sortLikes = function(req, res) {
 //   Movie.find()
 //     .sort('-likes')
@@ -126,21 +149,6 @@ exports.list = function(req, res) {
 // exports.sortHates = function(req, res) {
 //   Movie.find()
 //     .sort('-hates')
-//     // .populate('user', 'displayName')
-//     .exec(function(err, movies) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         res.jsonp(movies);
-//       }
-//     });
-// };
-
-// exports.sortUser = function(req, res) {
-//   Movie.find()
-//     .sort('-user')
 //     // .populate('user', 'displayName')
 //     .exec(function(err, movies) {
 //       if (err) {

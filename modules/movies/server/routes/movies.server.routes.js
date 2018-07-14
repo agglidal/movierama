@@ -20,7 +20,14 @@ module.exports = function(app) {
     .get(movies.read)
     .put(movies.update)
     .delete(movies.delete);
+  app.param('movieId', movies.movieByID);
+
+  app
+    .route('/api/movies/byUser/:userId')
+    .all(moviesPolicy.isAllowed)
+    .get(movies.listUser);
+
+  //app.param('username', movies.user.username);
 
   // Finish by binding the Movie middleware
-  app.param('movieId', movies.movieByID);
 };

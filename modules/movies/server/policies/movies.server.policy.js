@@ -23,6 +23,10 @@ exports.invokeRolesPolicies = function() {
         {
           resources: '/api/movies/:movieId',
           permissions: '*'
+        },
+        {
+          resources: '/api/movies/byUser/:userId',
+          permissions: '*'
         }
       ]
     },
@@ -36,6 +40,10 @@ exports.invokeRolesPolicies = function() {
         {
           resources: '/api/movies/:movieId',
           permissions: ['get']
+        },
+        {
+          resources: '/api/movies/byUser/:userId',
+          permissions: ['get']
         }
       ]
     },
@@ -48,6 +56,10 @@ exports.invokeRolesPolicies = function() {
         },
         {
           resources: '/api/movies/:movieId',
+          permissions: ['get']
+        },
+        {
+          resources: '/api/movies/byUser/:userId',
           permissions: ['get']
         }
       ]
