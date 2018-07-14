@@ -7,7 +7,10 @@
     .module('movies')
     .factory('MoviesService', MoviesService)
     .factory('MoviesServiceSortDate', MoviesServiceSortDate)
-    .factory('MoviesServicePerUser', MoviesServicePerUser);
+    .factory('MoviesServiceSortLikes', MoviesServiceSortLikes)
+    .factory('MoviesServiceSortHates', MoviesServiceSortHates)
+    .factory('MoviesServicePerUser', MoviesServicePerUser)
+    .factory('MoviesServiceAddOpinion', MoviesServiceAddOpinion);
 
   MoviesService.$inject = ['$resource'];
 
@@ -39,6 +42,34 @@
     }
   }
 
+  MoviesServiceSortLikes.$inject = ['$resource'];
+
+  function MoviesServiceSortLikes($resource) {
+    var service = {
+      getMovieListLiked: getMovieListLiked
+    };
+
+    return service;
+
+    function getMovieListLiked(order) {
+      return $resource('api/movies/liked/' + order).query();
+    }
+  }
+
+  MoviesServiceSortHates.$inject = ['$resource'];
+
+  function MoviesServiceSortHates($resource) {
+    var service = {
+      getMovieListHated: getMovieListHated
+    };
+
+    return service;
+
+    function getMovieListHated(order) {
+      return $resource('api/movies/hated/' + order).query();
+    }
+  }
+
   MoviesServicePerUser.$inject = ['$resource'];
 
   function MoviesServicePerUser($resource) {
@@ -52,6 +83,24 @@
       return $resource('api/movies/byUser/:userId').query({
         userId: userId
       });
+    }
+  }
+
+  MoviesServiceAddOpinion.$inject = ['$resource'];
+
+  function MoviesServiceAddOpinion($resource) {
+    var service = {
+      updateMovieOpinion: updateMovieOpinion
+    };
+
+    return service;
+
+    function updateMovieOpinion(movieId, opinion) {
+      return $resource(
+        'api/movies/' + movieId + '/opinion/' + opinion,
+        {},
+        { update: { method: 'PUT' } }
+      ).update();
     }
   }
 })();

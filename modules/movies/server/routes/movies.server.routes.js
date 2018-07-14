@@ -20,6 +20,7 @@ module.exports = function(app) {
     .get(movies.read)
     .put(movies.update)
     .delete(movies.delete);
+  // Binding the Movie to middleware
   app.param('movieId', movies.movieByID);
 
   app
@@ -27,7 +28,19 @@ module.exports = function(app) {
     .all(moviesPolicy.isAllowed)
     .get(movies.listUser);
 
-  //app.param('username', movies.user.username);
+  app
+    .route('/api/movies/:movieId/opinion/:opinion')
+    // .all(moviesPolicy.isAllowed)
+    .get(movies.read)
+    .put(movies.addOpinion);
 
-  // Finish by binding the Movie middleware
+  app
+    .route('/api/movies/hated/:order')
+    // .all(moviesPolicy.isAllowed)
+    .get(movies.sortHates);
+
+  app
+    .route('/api/movies/liked/:order')
+    // .all(moviesPolicy.isAllowed)
+    .get(movies.sortLikes);
 };

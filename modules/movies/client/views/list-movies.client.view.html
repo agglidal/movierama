@@ -19,12 +19,12 @@
         <h2>AA {{movie.user._id}}</h2>
       </small>
       <hr>
-      <p>{{movie.body | limitTo:500}}</p>
+      <p>{{movie.body | limitTo:1000}}</p>
       <small class="list-group-item-action active ">Likes
-        <span ng-bind="movie.likes" ng-click="movie.likes(movie._id)" ng-init="movie.likes=0"></span>
+        <span ng-bind="movie.likes" ng-click="movie.likes=movie.likes+1; vm.addOpinion(movie._id, 'like')"></span>
       </small>
       <small class="list-group-item-action active ">Hates
-        <span ng-bind="movie.hates " ng-click="movie.hates(movie._id)" ng-init="movie.hates=0"></span>
+        <span ng-bind="movie.hates " ng-click="movie.hates=movie.hates+1;vm.addOpinion(movie._id, 'hate')"></span>
       </small>
     </a>
   </div>

@@ -22,9 +22,9 @@
   </div>
   <p class="lead" ng-bind="vm.movie.content"></p>
   <small class="list-group-item-text">Likes
-    <a class="ng-binding ng-scope " data-ui-sref="movies.addLike({ movieId: vm.movie._id }) " ng-bind="vm.movie.likes "></a>
+    <a class="ng-binding ng-scope " ng-click="vm.addOpinion(movie._id, 'like')" ng-bind="vm.movie.likes "></a>
   </small>
   <small class="list-group-item-text ">Hates
-    <a class="ng-binding ng-scope " data-ui-sref="movies.addHate({ movieId: vm.movie._id }) " ng-bind="vm.movie.hates "></a>
+    <a class="ng-binding ng-scope " ng-click="vm.addOpinion(movie._id, 'hate')" ng-bind="vm.movie.hates "></a>
   </small>
 </section>

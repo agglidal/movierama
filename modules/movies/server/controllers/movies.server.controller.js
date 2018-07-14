@@ -53,9 +53,7 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
   var movie = req.movie;
-
   movie = _.extend(movie, req.body);
-
   movie.save(function(err) {
     if (err) {
       return res.status(400).send({
@@ -109,6 +107,9 @@ exports.list = function(req, res) {
     });
 };
 
+/**
+ * List of Movies per User
+ */
 exports.listUser = function(req, res) {
   var userId = req.params.userId;
   Movie.find({ user: userId })
@@ -131,51 +132,81 @@ exports.listUser = function(req, res) {
     });
 };
 
-// exports.sortLikes = function(req, res) {
-//   Movie.find()
-//     .sort('-likes')
-//     // .populate('user', 'displayName')
-//     .exec(function(err, movies) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         res.jsonp(movies);
-//       }
-//     });
-// };
+exports.sortLikes = function(req, res) {
+  var order = req.params.order;
+  console.log('like order');
+  console.log(req.params.order);
+  if (!order) {
+    order = 1;
+  }
+  Movie.find()
+    .sort({ likes: order })
+    .populate('user', 'displayName')
+    .exec(function(err, movies) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(movies);
+      }
+    });
+};
 
-// exports.sortHates = function(req, res) {
-//   Movie.find()
-//     .sort('-hates')
-//     // .populate('user', 'displayName')
-//     .exec(function(err, movies) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         res.jsonp(movies);
-//       }
-//     });
-// };
+exports.sortHates = function(req, res) {
+  var order = req.params.order;
+  console.log('hate order');
+  console.log(req.params.order);
+  if (!order) {
+    order = 1;
+  }
+  Movie.find()
+    .sort({ hates: order })
+    .populate('user', 'displayName')
+    .exec(function(err, movies) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(movies);
+      }
+    });
+};
+/**
+ * Add like or hate to a Movie
+ */
+exports.addOpinion = function(req, res) {
+  var movieId = req.params.movieId;
+  var opinion = req.params.opinion;
+  var incProperty;
+  var moviesOpinionProp;
 
-// exports.addLike = function(req, res) {
-//   Movie.findById(id)
-//     .update({ $inc: { likes: 1 } })
-//     //.isCurrentUserOwner
-//     // .populate('user', 'displayName')
-//     .exec(function(err, movies) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         res.jsonp(movies);
-//       }
-//     });
-// };
+  if (!mongoose.Types.ObjectId.isValid(movieId)) {
+    return res.status(400).send({
+      message: 'Movie is invalid'
+    });
+  }
+  if (opinion === 'like') {
+    incProperty = { $inc: { likes: 1 } };
+    moviesOpinionProp = 'movies.likes';
+  } else {
+    incProperty = { $inc: { hates: 1 } };
+    moviesOpinionProp = 'movies.hates';
+  }
+  Movie.findByIdAndUpdate(movieId, incProperty, { new: true })
+    //.isCurrentUserOwner
+    .populate('user', 'displayName')
+    .exec(function(err, movie) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(moviesOpinionProp);
+      }
+    });
+};
 
 /**
  * Movie middleware
