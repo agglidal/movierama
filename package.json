@@ -11,7 +11,7 @@
   },
   "engines": {
     "node": "=6.11.5",
-    "npm": "=3.10.10"
+    "npm": "=6.2.0"
   },
   "scripts": {
     "start": "grunt",
@@ -47,6 +47,7 @@
     "multer": "0.1.8",
     "node-pre-gyp": "0.6.4",
     "nodemailer": "^1.4.0",
+    "npm": "^6.2.0",
     "passport": "~0.2.2",
     "passport-facebook": "^2.0.0",
     "passport-github": "~0.1.5",
