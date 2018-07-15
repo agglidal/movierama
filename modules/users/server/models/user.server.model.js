@@ -11,22 +11,24 @@ var mongoose = require('mongoose'),
 /**
  * A Validation function for local strategy properties
  */
-var validateLocalStrategyProperty = function (property) {
-  return ((this.provider !== 'local' && !this.updated) || property.length);
+var validateLocalStrategyProperty = function(property) {
+  return (this.provider !== 'local' && !this.updated) || property.length;
 };
 
 /**
  * A Validation function for local strategy password
  */
-var validateLocalStrategyPassword = function (password) {
-  return (this.provider !== 'local' || validator.isLength(password, 6));
+var validateLocalStrategyPassword = function(password) {
+  return this.provider !== 'local' || validator.isLength(password, 6);
 };
 
 /**
  * A Validation function for local strategy email
  */
-var validateLocalStrategyEmail = function (email) {
-  return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email));
+var validateLocalStrategyEmail = function(email) {
+  return (
+    (this.provider !== 'local' && !this.updated) || validator.isEmail(email)
+  );
 };
 
 /**
@@ -81,10 +83,12 @@ var UserSchema = new Schema({
   providerData: {},
   additionalProvidersData: {},
   roles: {
-    type: [{
-      type: String,
-      enum: ['user', 'admin']
-    }],
+    type: [
+      {
+        type: String,
+        enum: ['user', 'admin']
+      }
+    ],
     default: ['user']
   },
   updated: {
@@ -100,14 +104,28 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
-  }
+  },
+  likes: [
+    {
+      type: Schema.ObjectId
+    }
+  ],
+  hates: [
+    {
+      type: Schema.ObjectId
+    }
+  ]
 });
 
 /**
  * Hook a pre save method to hash the password
  */
-UserSchema.pre('save', function (next) {
-  if (this.password && this.isModified('password') && this.password.length > 6) {
+UserSchema.pre('save', function(next) {
+  if (
+    this.password &&
+    this.isModified('password') &&
+    this.password.length > 6
+  ) {
     this.salt = crypto.randomBytes(16).toString('base64');
     this.password = this.hashPassword(this.password);
   }
@@ -118,9 +136,11 @@ UserSchema.pre('save', function (next) {
 /**
  * Create instance method for hashing a password
  */
-UserSchema.methods.hashPassword = function (password) {
+UserSchema.methods.hashPassword = function(password) {
   if (this.salt && password) {
-    return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64).toString('base64');
+    return crypto
+      .pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64)
+      .toString('base64');
   } else {
     return password;
   }
@@ -129,30 +149,37 @@ UserSchema.methods.hashPassword = function (password) {
 /**
  * Create instance method for authenticating user
  */
-UserSchema.methods.authenticate = function (password) {
+UserSchema.methods.authenticate = function(password) {
   return this.password === this.hashPassword(password);
 };
 
 /**
  * Find possible not used username
  */
-UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
+UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
   var _this = this;
   var possibleUsername = username + (suffix || '');
 
-  _this.findOne({
-    username: possibleUsername
-  }, function (err, user) {
-    if (!err) {
-      if (!user) {
-        callback(possibleUsername);
+  _this.findOne(
+    {
+      username: possibleUsername
+    },
+    function(err, user) {
+      if (!err) {
+        if (!user) {
+          callback(possibleUsername);
+        } else {
+          return _this.findUniqueUsername(
+            username,
+            (suffix || 0) + 1,
+            callback
+          );
+        }
       } else {
-        return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
+        callback(null);
       }
-    } else {
-      callback(null);
     }
-  });
+  );
 };
 
 mongoose.model('User', UserSchema);

@@ -10,7 +10,11 @@
     .factory('MoviesServiceSortLikes', MoviesServiceSortLikes)
     .factory('MoviesServiceSortHates', MoviesServiceSortHates)
     .factory('MoviesServicePerUser', MoviesServicePerUser)
-    .factory('MoviesServiceAddOpinion', MoviesServiceAddOpinion);
+    .factory('MoviesServiceAddOpinion', MoviesServiceAddOpinion)
+    .factory(
+      'MoviesServiceUpadteOpinionToUser',
+      MoviesServiceUpadteOpinionToUser
+    );
 
   MoviesService.$inject = ['$resource'];
 
@@ -95,9 +99,33 @@
 
     return service;
 
-    function updateMovieOpinion(movieId, opinion) {
+    function updateMovieOpinion(movieId, opinion, userId) {
       return $resource(
-        'api/movies/' + movieId + '/opinion/' + opinion,
+        'api/movies/' + movieId + '/opinion/' + opinion + '/user/' + userId,
+        {},
+        { update: { method: 'PUT' } }
+      ).update();
+    }
+  }
+
+  MoviesServiceUpadteOpinionToUser.$inject = ['$resource'];
+
+  function MoviesServiceUpadteOpinionToUser($resource) {
+    var service = {
+      updateMovieOpinionToUser: updateMovieOpinionToUser
+    };
+
+    return service;
+
+    function updateMovieOpinionToUser(movieId, opinion, userId) {
+      return $resource(
+        'api/movies/' +
+          movieId +
+          '/opinion/' +
+          opinion +
+          '/user/' +
+          userId +
+          '/userUpdate',
         {},
         { update: { method: 'PUT' } }
       ).update();

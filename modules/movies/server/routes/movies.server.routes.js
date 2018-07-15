@@ -29,10 +29,16 @@ module.exports = function(app) {
     .get(movies.listUser);
 
   app
-    .route('/api/movies/:movieId/opinion/:opinion')
+    .route('/api/movies/:movieId/opinion/:opinion/user/:userId')
     // .all(moviesPolicy.isAllowed)
     .get(movies.read)
     .put(movies.addOpinion);
+
+  app
+    .route('/api/movies/:movieId/opinion/:opinion/user/:userId/userUpdate')
+    // .all(moviesPolicy.isAllowed)
+    .get(movies.read)
+    .put(movies.updateOpinionToUser);
 
   app
     .route('/api/movies/hated/:order')

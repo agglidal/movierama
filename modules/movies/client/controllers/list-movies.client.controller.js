@@ -13,6 +13,7 @@
     'MoviesServiceSortHates',
     'MoviesServicePerUser',
     'MoviesServiceAddOpinion',
+    'MoviesServiceUpadteOpinionToUser',
     'Authentication'
   ];
   // MoviesListController.$inject = ['MoviesService'];
@@ -23,6 +24,7 @@
     MoviesServiceSortHates,
     MoviesServicePerUser,
     MoviesServiceAddOpinion,
+    MoviesServiceUpadteOpinionToUser,
     Authentication
   ) {
     var vm = this;
@@ -45,10 +47,21 @@
     vm.listUser = function(userId) {
       vm.movies = MoviesServicePerUser.getUserMovieList(userId);
     };
-    vm.addOpinion = function(movieId, opinion) {
+    vm.addOpinion = function(movieId, opinion, userId) {
       MoviesServiceAddOpinion.updateMovieOpinion(
         movieId,
-        opinion
+        opinion,
+        userId
+      ).$promise.then(function(response) {
+        console.log(response);
+        return response;
+      });
+    };
+    vm.updateOpinionToUser = function(movieId, opinion, userId) {
+      MoviesServiceUpadteOpinionToUser.updateMovieOpinionToUser(
+        movieId,
+        opinion,
+        userId
       ).$promise.then(function(response) {
         console.log(response);
         return response;

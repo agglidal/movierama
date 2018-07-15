@@ -18,15 +18,22 @@
         <span ng-if="!movie.user ">Deleted User</span>
       </small>
       <hr>
+      <h2>AA {{movie.user._id}}</h2>
       <p>{{movie.body | limitTo:1000}}</p>
       <small class="list-group-item-action active ">Likes
         <button type="button" class="btn btn-link" ng-bind="movie.likes" ng-disabled="!vm.authentication.user||movie.user._id===vm.authentication.user._id"
-          ng-click="movie.likes=movie.likes+1; vm.addOpinion(movie._id, 'like')">
+          ng-click="movie.likes=movie.likes+1; vm.addOpinion(movie._id, 'like', movie.user._id); vm.updateOpinionToUser(movie._id, 'like', vm.authentication.user._id)">
         </button>
       </small>
       <small class="list-group-item-action active ">Hates
         <button type="button" class="btn btn-link" ng-bind="movie.hates " ng-disabled="!vm.authentication.user||movie.user._id===vm.authentication.user._id"
-          ng-click="movie.hates=movie.hates+1;vm.addOpinion(movie._id, 'hate')"></button>
+          ng-click="movie.hates=movie.hates+1;vm.addOpinion(movie._id, 'hate', movie.user._id);vm.updateOpinionToUser(movie._id, 'hate', vm.authentication.user._id)"></button>
+      </small>
+      <small ng-if="" class="list-group-item-text" style="float: right">You like this movie |
+        <button type="button" class="btn btn-link">Unlike</button>
+      </small>
+      <small class="list-group-item-text" style="float: right">You hate this movie |
+        <button type="button" class="btn btn-link">Unhate</button>
       </small>
     </a>
   </div>

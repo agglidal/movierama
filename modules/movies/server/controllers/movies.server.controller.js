@@ -178,9 +178,14 @@ exports.sortHates = function(req, res) {
  */
 exports.addOpinion = function(req, res) {
   var movieId = req.params.movieId;
+  var userId = req.params.userId;
   var opinion = req.params.opinion;
   var incProperty;
   var moviesOpinionProp;
+  var userOpinionProp;
+
+  console.log(' userId');
+  console.log(userId);
 
   if (!mongoose.Types.ObjectId.isValid(movieId)) {
     return res.status(400).send({
@@ -203,7 +208,48 @@ exports.addOpinion = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(moviesOpinionProp);
+        res.jsonp(moviesOpinionProp);
+      }
+    });
+};
+
+/**
+ * Upated opinion to user like/hate lists
+ */
+exports.updateOpinionToUser = function(req, res) {
+  var movieId = req.params.movieId;
+  var authorizedUserId = req.params.userId;
+  var opinion = req.params.opinion;
+  var userOpinionProps;
+  console.log(' updateOpinionToUser');
+  console.log(opinion);
+
+  if (!mongoose.Types.ObjectId.isValid(movieId)) {
+    return res.status(400).send({
+      message: 'Movie is invalid'
+    });
+  }
+  if (opinion === 'like') {
+    userOpinionProps = {
+      $addToSet: { likes: movieId },
+      $pull: { hates: movieId }
+    };
+  } else if (opinion === 'hate') {
+    userOpinionProps = {
+      $addToSet: { hates: movieId },
+      $pull: { likes: movieId }
+    };
+  }
+
+  User.findByIdAndUpdate(authorizedUserId, userOpinionProps, { new: true })
+    .populate('user')
+    .exec(function(err, user) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(user);
       }
     });
 };
