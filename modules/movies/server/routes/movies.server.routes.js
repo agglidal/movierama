@@ -41,6 +41,14 @@ module.exports = function(app) {
     .put(movies.updateOpinionToUser);
 
   app
+    .route(
+      '/api/movies/:movieId/opinion/:opinion/user/:userId/userUpdate/hasOpinion'
+    )
+    // .all(moviesPolicy.isAllowed)
+    // .get(movies.read)
+    .get(movies.hasOpinion);
+
+  app
     .route('/api/movies/hated/:order')
     // .all(moviesPolicy.isAllowed)
     .get(movies.sortHates);

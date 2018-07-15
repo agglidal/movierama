@@ -14,7 +14,8 @@
     .factory(
       'MoviesServiceUpadteOpinionToUser',
       MoviesServiceUpadteOpinionToUser
-    );
+    )
+    .factory('MoviesServiceUserHasOpinion', MoviesServiceUserHasOpinion);
 
   MoviesService.$inject = ['$resource'];
 
@@ -129,6 +130,30 @@
         {},
         { update: { method: 'PUT' } }
       ).update();
+    }
+  }
+
+  MoviesServiceUserHasOpinion.$inject = ['$resource'];
+
+  function MoviesServiceUserHasOpinion($resource) {
+    var service = {
+      getUserHasOpinion: getUserHasOpinion
+    };
+
+    return service;
+
+    function getUserHasOpinion(movieId, opinion, userId) {
+      return $resource(
+        'api/movies/' +
+          movieId +
+          '/opinion/' +
+          opinion +
+          '/user/' +
+          userId +
+          '/userUpdate' +
+          '/hasOpinion',
+        {}
+      ).query();
     }
   }
 })();
