@@ -49,7 +49,6 @@ gulp.task('watch', function() {
   gulp.watch(defaultAssets.client.views).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.js, ['jshint']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed);
-  gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.less, ['less', 'csslint']).on('change', plugins.livereload.changed);
 });
 
@@ -91,16 +90,6 @@ gulp.task('cssmin', function () {
     .pipe(plugins.cssmin())
     .pipe(plugins.concat('application.min.css'))
     .pipe(gulp.dest('public/dist'));
-});
-
-// Sass task
-gulp.task('sass', function () {
-  return gulp.src(defaultAssets.client.sass)
-    .pipe(plugins.sass())
-    .pipe(plugins.rename(function (file) {
-      file.dirname = file.dirname.replace(path.sep + 'scss', path.sep + 'css');
-    }))
-    .pipe(gulp.dest('./modules/'));
 });
 
 // Less task
@@ -164,14 +153,9 @@ gulp.task('protractor', function () {
     });
 });
 
-// Lint CSS and JavaScript files.
-gulp.task('lint', function(done) {
-  runSequence('less', 'sass', ['csslint', 'jshint'], done);
-});
-
 // Lint project files and minify them into two production files.
 gulp.task('build', function(done) {
-  runSequence('env:dev' ,'lint', ['uglify', 'cssmin'], done);
+  runSequence('env:dev' , ['uglify', 'cssmin'], done);
 });
 
 // Run the project tests
@@ -181,15 +165,15 @@ gulp.task('test', function(done) {
 
 // Run the project in development mode
 gulp.task('default', function(done) {
-  runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
 // Run the project in debug mode
 gulp.task('debug', function(done) {
-  runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
 // Run the project in production mode
 gulp.task('prod', function(done) {
-  runSequence('build', 'lint', ['nodemon', 'watch'], done);
+  runSequence('build', ['nodemon', 'watch'], done);
 });
