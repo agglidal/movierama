@@ -25,31 +25,33 @@
       <small class="list-group-item-action active ">Likes
         <button type="button" class="btn btn-link" ng-bind="movie.likes" ng-disabled="!vm.authentication.user||movie.user._id===vm.authentication.user._id||movie.isLikedByCurrentUser"
           ng-click="movie.isLikedByCurrentUser=true;
+          movie.likes=movie.likes+1; movie.hates = movie.isHatedByCurrentUser? movie.hates-1: movie.hates;
+          vm.addOpinion(movie._id, 'like', movie.user._id, movie.isHatedByCurrentUser);
           movie.isHatedByCurrentUser=false;
-          movie.likes=movie.likes+1; movie.hates=movie.hates-1;
-          vm.addOpinion(movie._id, 'like', movie.user._id);
           vm.updateOpinionToUser(movie._id, 'like', vm.authentication.user._id)">
         </button>
       </small>
       <small class="list-group-item-action active ">Hates
         <button type="button" class="btn btn-link" ng-bind="movie.hates " ng-disabled="!vm.authentication.user||movie.user._id===vm.authentication.user._id||movie.isHatedByCurrentUser"
-          ng-click="movie.isLikedByCurrentUser=false;
-          movie.isHatedByCurrentUser=true;
-          movie.hates=movie.hates+1;movie.likes=movie.likes-1;
-          vm.addOpinion(movie._id, 'hate', movie.user._id);
+          ng-click="movie.isHatedByCurrentUser=true;
+          movie.hates=movie.hates+1; movie.likes = movie.isLikedByCurrentUser? movie.likes-1: movie.likes;
+          vm.addOpinion(movie._id, 'hate', movie.user._id,movie.isLikedByCurrentUser);
+          movie.isLikedByCurrentUser=false;
           vm.updateOpinionToUser(movie._id, 'hate', vm.authentication.user._id)"></button>
       </small>
       <small ng-if="movie.isLikedByCurrentUser||!movie.user._id===vm.authentication.user._id" class="list-group-item-text" style="float: right">You like this movie |
-        <button type="button" class="btn btn-link" ng-click="movie.isLikedByCurrentUser=false;
+        <button type="button" class="btn btn-link" ng-click="
         movie.isHatedByCurrentUser=true;
-        movie.hates=movie.hates+1;movie.likes=movie.likes-1;
-        vm.addOpinion(movie._id, 'hate', movie.user._id);
+        movie.hates=movie.hates+1; movie.likes = movie.isLikedByCurrentUser? movie.likes-1: movie.likes;
+        vm.addOpinion(movie._id, 'hate', movie.user._id, movie.isLikedByCurrentUser);
+        movie.isLikedByCurrentUser=false;
         vm.updateOpinionToUser(movie._id, 'hate', vm.authentication.user._id)">Unlike</button>
       </small>
       <small ng-if="movie.isHatedByCurrentUser||!movie.user._id===vm.authentication.user._id" class="list-group-item-text" style="float: right">You hate this movie |
         <button type="button" class="btn btn-link" ng-click="movie.isLikedByCurrentUser=true;
-        movie.isHatedByCurrentUser=false;movie.likes=movie.likes+1; movie.hates=movie.hates-1;
-        vm.addOpinion(movie._id, 'like', movie.user._id);
+        movie.likes=movie.likes+1;  movie.hates = movie.isHatedByCurrentUser? movie.hates-1: movie.hates;
+        vm.addOpinion(movie._id, 'like', movie.user._id, movie.isHatedByCurrentUser);
+        movie.isHatedByCurrentUser=false;
         vm.updateOpinionToUser(movie._id, 'like', vm.authentication.user._id)">Unhate</button>
       </small>
       <small ng-if="!movie.isHatedByCurrentUser&&!movie.isLikedByCurrentUser&&movie.user._id!=vm.authentication.user._id" class="list-group-item-text"

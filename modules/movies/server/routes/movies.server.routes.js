@@ -29,7 +29,9 @@ module.exports = function(app) {
     .get(movies.listUser);
 
   app
-    .route('/api/movies/:movieId/opinion/:opinion/user/:userId')
+    .route(
+      '/api/movies/:movieId/opinion/:opinion/user/:userId/userUpdate/hasOpinion/:hasOpinion'
+    )
     // .all(moviesPolicy.isAllowed)
     .get(movies.read)
     .put(movies.addOpinion);

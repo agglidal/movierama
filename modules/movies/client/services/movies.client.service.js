@@ -100,9 +100,17 @@
 
     return service;
 
-    function updateMovieOpinion(movieId, opinion, userId) {
+    function updateMovieOpinion(movieId, opinion, userId, hasOpinion) {
       return $resource(
-        'api/movies/' + movieId + '/opinion/' + opinion + '/user/' + userId,
+        'api/movies/' +
+          movieId +
+          '/opinion/' +
+          opinion +
+          '/user/' +
+          userId +
+          '/userUpdate' +
+          '/hasOpinion/' +
+          hasOpinion,
         {},
         { update: { method: 'PUT' } }
       ).update();

@@ -38,11 +38,15 @@
 
     $scope.init = function() {
       MoviesService.query().$promise.then(function(response) {
-        for (var i = 0; i < response.length; i++) {
-          if (vm.authentication.user.likes.includes(response[i]._id)) {
-            response[i].isLikedByCurrentUser = true;
-          } else if (vm.authentication.user.hates.includes(response[i]._id)) {
-            response[i].isHatedByCurrentUser = true;
+        if (vm.authentication.user) {
+          for (var i = 0; i < response.length; i++) {
+            response[i].isLikedByCurrentUser = false;
+            response[i].isHatedByCurrentUser = false;
+            if (vm.authentication.user.likes.includes(response[i]._id)) {
+              response[i].isLikedByCurrentUser = true;
+            } else if (vm.authentication.user.hates.includes(response[i]._id)) {
+              response[i].isHatedByCurrentUser = true;
+            }
           }
         }
         vm.movies = response;
@@ -69,11 +73,12 @@
     vm.listUser = function(userId) {
       vm.movies = MoviesServicePerUser.getUserMovieList(userId);
     };
-    vm.addOpinion = function(movieId, opinion, userId) {
+    vm.addOpinion = function(movieId, opinion, userId, hasOpinion) {
       MoviesServiceAddOpinion.updateMovieOpinion(
         movieId,
         opinion,
-        userId
+        userId,
+        hasOpinion
       ).$promise.then(function(response) {
         return response;
       });

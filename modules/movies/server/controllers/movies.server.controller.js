@@ -181,9 +181,13 @@ exports.addOpinion = function(req, res) {
   var movieId = req.params.movieId;
   var userId = req.params.userId;
   var opinion = req.params.opinion;
+  var hasOpositeOpinion = req.params.hasOpinion;
   var incProperty;
   var moviesOpinionProp;
   var userOpinionProp;
+
+  console.log('opinion');
+  console.log(opinion);
 
   if (!mongoose.Types.ObjectId.isValid(movieId)) {
     return res.status(400).send({
@@ -191,10 +195,22 @@ exports.addOpinion = function(req, res) {
     });
   }
   if (opinion === 'like') {
-    incProperty = { $inc: { likes: 1 }, $inc: { hates: -1 } };
+    console.log('hasOpositeOpinionHate');
+    console.log(hasOpositeOpinion);
+    if (hasOpositeOpinion === 'true') {
+      incProperty = { $inc: { likes: 1, hates: -1 } };
+    } else {
+      incProperty = { $inc: { likes: 1 } };
+    }
     moviesOpinionProp = 'movies.likes';
-  } else {
-    incProperty = { $inc: { hates: 1 }, $inc: { likes: -1 } };
+  } else if (opinion === 'hate') {
+    console.log('hasOpositeOpinionLike');
+    console.log(hasOpositeOpinion);
+    if (hasOpositeOpinion === 'true') {
+      incProperty = { $inc: { hates: 1, likes: -1 } };
+    } else {
+      incProperty = { $inc: { hates: 1 } };
+    }
     moviesOpinionProp = 'movies.hates';
   }
   Movie.findByIdAndUpdate(movieId, incProperty, { new: true })
