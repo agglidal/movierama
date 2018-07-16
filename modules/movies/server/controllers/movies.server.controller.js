@@ -87,8 +87,7 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
   var order = req.query.order;
-  // console.log('order');
-  // console.log(req.query);
+
   if (!order) {
     order = 1;
   }
@@ -113,7 +112,7 @@ exports.list = function(req, res) {
 exports.listUser = function(req, res) {
   var userId = req.params.userId;
   Movie.find({ user: userId })
-    // .sort({ created: order })
+    .sort({ created: 1 })
     .populate({
       path: 'user',
       match: { _id: userId }
@@ -132,10 +131,12 @@ exports.listUser = function(req, res) {
     });
 };
 
+/**
+ * TODO: Sorting functions better to be refactored into one function
+ * Sort Movies based on Likes
+ */
 exports.sortLikes = function(req, res) {
   var order = req.params.order;
-  console.log('like order');
-  console.log(req.params.order);
   if (!order) {
     order = 1;
   }
@@ -152,11 +153,11 @@ exports.sortLikes = function(req, res) {
       }
     });
 };
-
+/**
+ * Sort Movies based on Hates
+ */
 exports.sortHates = function(req, res) {
   var order = req.params.order;
-  console.log('hate order');
-  console.log(req.params.order);
   if (!order) {
     order = 1;
   }
@@ -184,23 +185,19 @@ exports.addOpinion = function(req, res) {
   var moviesOpinionProp;
   var userOpinionProp;
 
-  console.log(' userId');
-  console.log(userId);
-
   if (!mongoose.Types.ObjectId.isValid(movieId)) {
     return res.status(400).send({
       message: 'Movie is invalid'
     });
   }
   if (opinion === 'like') {
-    incProperty = { $inc: { likes: 1 } };
+    incProperty = { $inc: { likes: 1 }, $inc: { hates: -1 } };
     moviesOpinionProp = 'movies.likes';
   } else {
-    incProperty = { $inc: { hates: 1 } };
+    incProperty = { $inc: { hates: 1 }, $inc: { likes: -1 } };
     moviesOpinionProp = 'movies.hates';
   }
   Movie.findByIdAndUpdate(movieId, incProperty, { new: true })
-    //.isCurrentUserOwner
     .populate('user', 'displayName')
     .exec(function(err, movie) {
       if (err) {
@@ -221,8 +218,6 @@ exports.updateOpinionToUser = function(req, res) {
   var authorizedUserId = req.params.userId;
   var opinion = req.params.opinion;
   var userOpinionProps;
-  console.log(' updateOpinionToUser');
-  console.log(opinion);
 
   if (!mongoose.Types.ObjectId.isValid(movieId)) {
     return res.status(400).send({
@@ -262,8 +257,6 @@ exports.hasOpinion = function(req, res) {
   var authorizedUserId = req.params.userId;
   var opinion = req.params.opinion;
   var userOpinionProps;
-  console.log(' hasOpinion');
-  console.log(opinion);
 
   if (!mongoose.Types.ObjectId.isValid(movieId)) {
     return res.status(400).send({

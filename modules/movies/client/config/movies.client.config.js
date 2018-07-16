@@ -16,24 +16,11 @@
       });
 
       Menus.addMenuItem('topbar', {
-        title: 'Create Movie',
+        title: 'New Movie',
         state: 'movies.create',
         // type: 'dropdown',
         roles: ['user']
       });
-
-      // // Add the dropdown list item
-      // Menus.addSubMenuItem('topbar', 'movies', {
-      //   title: 'List Movies',
-      //   state: 'movies.list'
-      // });
-
-      // // Add the dropdown create item
-      // Menus.addSubMenuItem('topbar', 'movies', {
-      //   title: 'Create Movie',
-      //   state: 'movies.create',
-      //   roles: ['user']
-      // });
     }
   ]);
 })();

@@ -15,7 +15,8 @@
     'MoviesServiceAddOpinion',
     'MoviesServiceUpadteOpinionToUser',
     'MoviesServiceUserHasOpinion',
-    'Authentication'
+    'Authentication',
+    '$scope'
   ];
   // MoviesListController.$inject = ['MoviesService'];
   function MoviesListController(
@@ -27,58 +28,30 @@
     MoviesServiceAddOpinion,
     MoviesServiceUpadteOpinionToUser,
     MoviesServiceUserHasOpinion,
-    Authentication
+    Authentication,
+    $scope
   ) {
     var vm = this;
 
     vm.authentication = Authentication;
     vm.ascending = 1;
-    vm.movies = MoviesService.query();
-    vm.isLikedByCurrentUser = false;
-    vm.isHatedByCurrentUser = false;
-    // .$promise.then(function(response) {
-    //   console.log(response);
-    //   for (var i = 0; i < response.length; i++) {
-    //     console.log(response[i]._id + ' maria');
-    //     vm.hasOpinion(
-    //       movie._id,
-    //       'like',
-    //       vm.authentication.user._id
-    //     ).$promise.then(function(response1) {
-    //       console.log(response1);
-    //       if (response[i]._id === vm.authentication._id){
-    //          console.log(response[i]._id + ' maria');
-    //       }
-    //       return response1;
-    //     });
-    //     if (matchedUserLikes._id === vm.authentication._id) {
-    //       vm.isLikedByCurrentUser = true;
-    //     }
-    //     var matchedUserHates = vm.hasOpinion(
-    //       vm.movie._Id,
-    //       'hate',
-    //       vm.authentication.user._id
-    //     );
-    //     if (matchedUserHates._id === vm.authentication._id) {
-    //       vm.isHatedByCurrentUser = true;
-    //     }
-    //   }
-    //   return response;
-    // });
+
+    $scope.init = function() {
+      MoviesService.query().$promise.then(function(response) {
+        for (var i = 0; i < response.length; i++) {
+          if (vm.authentication.user.likes.includes(response[i]._id)) {
+            response[i].isLikedByCurrentUser = true;
+          } else if (vm.authentication.user.hates.includes(response[i]._id)) {
+            response[i].isHatedByCurrentUser = true;
+          }
+        }
+        vm.movies = response;
+      });
+    };
+    $scope.init();
 
     vm.hasOpinion = function(movieId, opinion, userId) {
-      MoviesServiceUserHasOpinion.getUserHasOpinion(
-        movieId,
-        opinion,
-        userId
-      ).$promise.then(function(response) {
-        console.log(response);
-        // if (response > 0) {
-        //   vm.isLikedByCurrentUser = true;
-        //   return true;
-        // } else return vm.opinionResult;
-        return response;
-      });
+      MoviesServiceUserHasOpinion.getUserHasOpinion(movieId, opinion, userId);
     };
 
     vm.sortDate = function() {
@@ -102,7 +75,6 @@
         opinion,
         userId
       ).$promise.then(function(response) {
-        console.log(response);
         return response;
       });
     };
@@ -112,7 +84,6 @@
         opinion,
         userId
       ).$promise.then(function(response) {
-        console.log(response);
         return response;
       });
     };
